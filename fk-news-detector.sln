@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fk-news-detector", "fk-news-detector.csproj", "{FD894237-D5D9-4C32-9F1F-0A43E7FACA00}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FD894237-D5D9-4C32-9F1F-0A43E7FACA00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD894237-D5D9-4C32-9F1F-0A43E7FACA00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD894237-D5D9-4C32-9F1F-0A43E7FACA00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD894237-D5D9-4C32-9F1F-0A43E7FACA00}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

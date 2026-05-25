@@ -1,0 +1,72 @@
+@{
+    ViewBag.Title = "Home";
+}
+
+<!-- Hero -->
+<section class="hero-section text-center">
+    <div class="container">
+        <h1>Stop Sharing <span>Fake News</span></h1>
+        <p class="lead">
+            Paste an article or drop a URL — our AI analyzes it in seconds and returns
+            a <strong>FAKE</strong>, <strong>REAL</strong>, or <strong>UNCERTAIN</strong> verdict.
+        </p>
+        <a href="@Url.Action("Submit", "Article")" class="btn btn-accent btn-lg px-4">
+            Analyze an Article
+        </a>
+    </div>
+</section>
+
+<!-- Cards -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-5 mb-4 mb-md-0">
+                <a href="@Url.Action("Submit", "Article")?mode=text" class="card-action h-100">
+                    <span class="card-icon">📋</span>
+                    <h5>Paste Text</h5>
+                    <p>Copy and paste the full article content directly into our editor for instant analysis.</p>
+                    <span class="cta-link">Get started →</span>
+                </a>
+            </div>
+            <div class="col-md-5">
+                <a href="@Url.Action("Submit", "Article")?mode=url" class="card-action h-100">
+                    <span class="card-icon">🔗</span>
+                    <h5>Drop a URL</h5>
+                    <p>Enter a link and we'll automatically fetch and extract the article content for you.</p>
+                    <span class="cta-link">Get started →</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <p class="text-muted mb-2">Already analyzed some articles?</p>
+            <a href="@Url.Action("Index", "Article")" class="btn btn-outline-secondary btn-sm">
+                View Analysis History
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- How it works -->
+<section class="py-5" style="background: #fff; border-top: 1px solid #dee2e6;">
+    <div class="container">
+        <h2 class="text-center font-weight-bold mb-5">How It Works</h2>
+        <div class="row text-center">
+            <div class="col-md-4 mb-4 mb-md-0">
+                <div class="mb-3" style="font-size:2rem">📝</div>
+                <h5 class="font-weight-bold">1. Submit</h5>
+                <p class="text-muted small">Paste the article text or provide a URL. We handle extraction automatically.</p>
+            </div>
+            <div class="col-md-4 mb-4 mb-md-0">
+                <div class="mb-3" style="font-size:2rem">🤖</div>
+                <h5 class="font-weight-bold">2. Analyze</h5>
+                <p class="text-muted small">Our NLP model evaluates language patterns, source signals, and factual consistency.</p>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-3" style="font-size:2rem">✅</div>
+                <h5 class="font-weight-bold">3. Verdict</h5>
+                <p class="text-muted small">Receive FAKE, REAL, or UNCERTAIN — with a confidence score you can trust.</p>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,85 @@
+@{
+    ViewBag.Title = "Privacy Policy";
+}
+
+<div class="page-header">
+    <div class="container">
+        <h1>Privacy Policy</h1>
+        <p>Last updated: May 2026</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="prose-card">
+
+                <p>
+                    FakeScope ("we", "us", or "our") is committed to protecting your privacy.
+                    This policy explains what data we collect when you use this application and how it is used.
+                </p>
+
+                <h2>1. Data We Collect</h2>
+                <p>When you submit an article for analysis, we store the following information in our database:</p>
+                <ul>
+                    <li>The article text or URL you submitted</li>
+                    <li>Extracted metadata (title, author, publisher, publication date)</li>
+                    <li>The AI verdict and confidence score</li>
+                    <li>The timestamp of the analysis</li>
+                </ul>
+                <p>We do <strong>not</strong> collect personal identification information such as your name, email address, or IP address.</p>
+
+                <h2>2. How We Use Your Data</h2>
+                <ul>
+                    <li>To return analysis results to you in the same session</li>
+                    <li>To maintain an audit trail of model predictions for quality improvement</li>
+                    <li>To aggregate anonymous usage statistics (e.g., total articles analyzed)</li>
+                </ul>
+
+                <h2>3. Data Storage</h2>
+                <p>
+                    All analysis data is stored in an Apache Cassandra database hosted on our infrastructure.
+                    Data is retained for a maximum of 12 months before being automatically purged.
+                    We do not sell, rent, or share stored article data with third parties.
+                </p>
+
+                <h2>4. External Services</h2>
+                <p>
+                    When you submit a URL, our server fetches the page on your behalf. The target website
+                    may log our server's IP address. We have no control over third-party websites' data practices.
+                </p>
+                <p>
+                    Article content is sent to our internal Python ML microservice for classification.
+                    This service runs on the same infrastructure and does not share data externally.
+                </p>
+
+                <h2>5. Cookies</h2>
+                <p>
+                    FakeScope uses only the session cookie required for CSRF protection (anti-forgery token).
+                    No tracking cookies or third-party analytics cookies are set.
+                </p>
+
+                <h2>6. Your Rights</h2>
+                <p>
+                    Because we do not collect personally identifiable information, we cannot identify
+                    which submissions belong to you. If you have concerns about data stored from a
+                    specific analysis, please contact us with the Analysis ID shown on your result page.
+                </p>
+
+                <h2>7. Changes to This Policy</h2>
+                <p>
+                    We may update this policy from time to time. The "Last updated" date at the top of
+                    this page will reflect any changes. Continued use of FakeScope after changes
+                    constitutes acceptance of the revised policy.
+                </p>
+
+                <h2>8. Contact</h2>
+                <p>
+                    For any privacy-related questions, please open an issue on our project repository
+                    or reach out through the contact information provided in the application documentation.
+                </p>
+
+            </div>
+        </div>
+    </div>
+</div>

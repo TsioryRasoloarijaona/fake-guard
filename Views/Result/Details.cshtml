@@ -1,0 +1,108 @@
+@{
+    ViewBag.Title = "Analysis Result";
+
+    // Swap these values when the model is wired up
+    var verdict       = "FAKE";
+    var badgeClass    = "danger";   // danger | success | warning
+    var verdictIcon   = "❌";       // ❌ | ✅ | ⚠️
+    var confidencePct = 91;
+}
+
+<div class="page-header">
+    <div class="container">
+        <h1>Analysis Result</h1>
+        <p>Completed — May 25, 2026, 14:32 UTC</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+
+            <!-- 1. Verdict Card -->
+            <div class="card shadow mb-4 verdict-card border-@badgeClass">
+                <div class="card-body text-center py-5">
+                    <span class="verdict-emoji">@verdictIcon</span>
+                    <span class="badge badge-@badgeClass badge-pill verdict-badge mb-3">@verdict</span>
+                    <div class="mb-3">
+                        <small class="text-muted font-weight-bold text-uppercase">Confidence Score</small>
+                        <div class="progress mt-2">
+                            <div class="progress-bar bg-@badgeClass"
+                                 role="progressbar"
+                                 style="width: @confidencePct%"
+                                 aria-valuenow="@confidencePct"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100">
+                                @confidencePct%
+                            </div>
+                        </div>
+                    </div>
+                    <small class="text-muted">Model: FakeGuard v1</small>
+                </div>
+            </div>
+
+            <!-- 2. Article Details Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title font-weight-bold mb-3">Article Details</h5>
+                    <dl class="row mb-0">
+                        <dt class="col-sm-3 text-muted">Title</dt>
+                        <dd class="col-sm-9">Scientists Claim Moon Is Made of Cheese, NASA Confirms</dd>
+
+                        <dt class="col-sm-3 text-muted">Source</dt>
+                        <dd class="col-sm-9">
+                            <a href="https://example-news.com/moon-cheese" target="_blank" rel="noopener noreferrer">
+                                example-news.com/moon-cheese
+                            </a>
+                        </dd>
+
+                        <dt class="col-sm-3 text-muted">Submitted</dt>
+                        <dd class="col-sm-9 mb-0">25 May 2026, 14:32 UTC</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <!-- 3. Explanation Card -->
+            <div class="card shadow-sm mb-4" style="background: #fff9f9;">
+                <div class="card-body">
+                    <h5 class="card-title font-weight-bold mb-2">What does this mean?</h5>
+                    @if (badgeClass == "danger")
+                    {
+                        <p class="text-danger mb-0">
+                            The model detected strong indicators of misinformation — sensationalist language,
+                            unverified claims, and patterns consistent with fabricated content.
+                            We recommend <strong>not sharing</strong> this article until claims are independently verified.
+                        </p>
+                    }
+                    else if (badgeClass == "success")
+                    {
+                        <p class="text-success mb-0">
+                            The language, structure, and content of this article align with patterns found in credible journalism.
+                            No significant signs of fabrication were detected.
+                            Always verify critical claims with primary sources.
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="text-warning mb-0">
+                            The model's confidence is below the 75% threshold required for a definitive verdict.
+                            This is common for opinion pieces, satire, or niche topics outside the training distribution.
+                            Use your own judgment and consult additional sources.
+                        </p>
+                    }
+                </div>
+            </div>
+
+            <!-- 4. Navigation Row -->
+            <div class="d-flex justify-content-between flex-wrap">
+                <a href="@Url.Action("Submit", "Article")" class="btn btn-accent">
+                    ← Analyze Another
+                </a>
+                <a href="@Url.Action("Index", "Article")" class="btn btn-outline-secondary">
+                    View History
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,153 @@
+@{
+    ViewData["Title"] = "Analysis Result";
+}
+
+<!-- ── Page Hero ──────────────────────────────────────────────── -->
+<div class="page-hero">
+    <div class="container">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <a asp-controller="Article" asp-action="Submit" style="color:rgba(255,255,255,.6);font-size:.85rem;display:flex;align-items:center;gap:5px;">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+                </svg>
+                Analyze Another
+            </a>
+            <span style="color:rgba(255,255,255,.25)">|</span>
+            <span style="font-size:.85rem;color:rgba(255,255,255,.5)">
+                Analysis ID: <code style="color:rgba(255,255,255,.7)">a3f9c1d2…</code>
+            </span>
+        </div>
+        <h1 class="mt-3">Analysis Result</h1>
+        <p>Completed at May 25, 2026 — 14:32 UTC</p>
+    </div>
+</div>
+
+<!-- ── Main Content ───────────────────────────────────────────── -->
+<div class="container py-5">
+    <div class="row g-4">
+
+        <!-- Result Card -->
+        <div class="col-lg-8">
+            <div class="result-card mb-4">
+
+                <!-- Verdict Header — swap class between: fake / real / uncertain -->
+                <div class="verdict-header fake">
+                    <div class="verdict-icon fake">🚫</div>
+                    <div class="verdict-word fake">FAKE</div>
+                    <p class="verdict-desc">
+                        Our model is highly confident this article contains misleading or fabricated content.
+                    </p>
+
+                    <div class="confidence-display">
+                        <div class="c-label">
+                            <span>Confidence Score</span>
+                            <span class="c-value">91%</span>
+                        </div>
+                        <div class="c-bar">
+                            <div class="c-fill fake" data-width="91" style="width:0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article Details -->
+                <div class="result-body">
+                    <div class="result-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Article Title</span>
+                            <span class="meta-value">Scientists Claim Moon Is Made of Cheese, NASA Confirms</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Author</span>
+                            <span class="meta-value">John Doe</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Publisher</span>
+                            <span class="meta-value">example-news.com</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Published</span>
+                            <span class="meta-value">May 20, 2026</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4" style="display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--muted);">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                        </svg>
+                        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                            <strong>Source:</strong>
+                            <a href="#" style="color:var(--blue)">https://example-news.com/moon-cheese-nasa</a>
+                        </span>
+                    </div>
+
+                    <div class="article-excerpt">
+                        <strong style="font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);display:block;margin-bottom:8px;">Article Excerpt</strong>
+                        In a bombshell announcement that has shaken the scientific community, a group of researchers
+                        claim to have definitively proven that the Moon is composed primarily of aged cheddar.
+                        NASA spokesperson Linda Harrington reportedly confirmed the findings in a press conference
+                        held on Tuesday, calling it "the most significant discovery of our generation"…
+                    </div>
+
+                    <div class="result-actions">
+                        <a asp-controller="Article" asp-action="Submit" class="btn-primary-custom">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                            </svg>
+                            Analyze Another
+                        </a>
+                        <a asp-controller="Home" asp-action="Index" class="btn-outline-custom">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+                            </svg>
+                            Back to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4 result-sidebar">
+
+            <div class="sidebar-card">
+                <h6>What does this mean?</h6>
+                <div class="verdict-explanation">
+                    <p>The model detected strong indicators of misinformation: sensationalist language, unverified claims, or patterns commonly found in fabricated content.</p>
+                    <p style="margin-top:10px">We recommend <strong>not sharing</strong> this article until you've independently verified the claims with a reputable source.</p>
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <h6>Model Details</h6>
+                <div class="model-info">
+                    <div class="model-row">
+                        <span class="key">Model</span>
+                        <span class="val">FakeScope v1</span>
+                    </div>
+                    <div class="model-row">
+                        <span class="key">Confidence</span>
+                        <span class="val" style="color:var(--fake)">91%</span>
+                    </div>
+                    <div class="model-row">
+                        <span class="key">Threshold</span>
+                        <span class="val">≥ 75%</span>
+                    </div>
+                    <div class="model-row">
+                        <span class="key">Analyzed At</span>
+                        <span class="val">14:32 UTC</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-card" style="background:var(--bg);">
+                <h6>⚠️ Disclaimer</h6>
+                <p style="font-size:.8rem;color:var(--muted);margin:0;line-height:1.6">
+                    FakeScope is an AI tool and may make mistakes. Do not rely solely on this verdict for
+                    important decisions. Always cross-reference with trusted news sources.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>

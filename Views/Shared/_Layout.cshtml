@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title — FakeGuard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+
+<header>
+    <nav class="navbar navbar-expand-md navbar-fakeguard">
+        <div class="container">
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                <span class="brand-shield">🛡</span>
+                FakeGuard
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNav"
+                    aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ml-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Home")">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Article")">History</a>
+                    </li>
+                    <li class="nav-item ml-2">
+                        <a class="nav-link btn-nav-cta rounded" href="@Url.Action("Submit", "Article")">Analyze Article</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main role="main">
+    @RenderBody()
+</main>
+
+<footer class="site-footer">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap">
+        <span>&copy; 2026 FakeGuard — AI-powered news credibility analysis</span>
+        <a href="@Url.Action("Privacy", "Home")">Privacy Policy</a>
+    </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@RenderSection("Scripts", required: false)
+</body>
+</html>

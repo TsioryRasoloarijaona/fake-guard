@@ -1,0 +1,115 @@
+@{
+    ViewBag.Title = "Analyze Article";
+}
+
+<div class="page-header">
+    <div class="container">
+        <h1>Analyze an Article</h1>
+        <p>Paste the text or enter a URL — we'll do the rest.</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-body p-4">
+
+                    @Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
+
+                    <form id="articleForm" method="post" action="@Url.Action("Submit", "Article")">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="InputMode" name="InputMode" value="text" />
+
+                        <!-- Tabs -->
+                        <ul class="nav nav-tabs" id="inputTabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="text-tab" data-toggle="tab" href="#panel-text"
+                                   role="tab" data-tab="text">
+                                    📋 Paste Text
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="url-tab" data-toggle="tab" href="#panel-url"
+                                   role="tab" data-tab="url">
+                                    🔗 From URL
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content" id="inputTabContent">
+
+                            <!-- Tab 1: Paste Text -->
+                            <div class="tab-pane fade show active" id="panel-text" role="tabpanel">
+                                <div class="form-group">
+                                    <label class="form-label" for="Title">Article Title</label>
+                                    <input type="text" id="Title" name="Title" class="form-control"
+                                           placeholder="Enter the article headline" />
+                                    <span class="text-danger small"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="Content">Article Content</label>
+                                    <textarea id="Content" name="Content" class="form-control"
+                                              rows="10" placeholder="Paste the full article text here…"></textarea>
+                                    <span class="text-danger small"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="SourceUrl">
+                                        Source URL <span class="text-muted font-weight-normal">(optional)</span>
+                                    </label>
+                                    <input type="url" id="SourceUrl" name="SourceUrl" class="form-control"
+                                           placeholder="https://example.com/article" />
+                                    <span class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <!-- Tab 2: From URL -->
+                            <div class="tab-pane fade" id="panel-url" role="tabpanel">
+                                <div class="form-group">
+                                    <label class="form-label" for="ArticleUrl">Article URL</label>
+                                    <input type="url" id="ArticleUrl" name="ArticleUrl" class="form-control"
+                                           placeholder="https://example.com/article/breaking-news" />
+                                    <span class="text-danger small"></span>
+                                </div>
+                                <div class="alert alert-info">
+                                    <strong>Auto-scrape:</strong> We'll fetch the page and extract the article body,
+                                    title, author, and publication date automatically. JavaScript-rendered pages are supported.
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <button type="submit" id="submitBtn" class="btn btn-accent btn-lg btn-block mt-3">
+                            <span class="btn-text">🔍 Analyze Article</span>
+                            <span class="spinner-content d-none">
+                                <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
+                                Analyzing…
+                            </span>
+                        </button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Sync hidden InputMode with active tab
+        document.querySelectorAll('#inputTabs .nav-link').forEach(function (tab) {
+            tab.addEventListener('shown.bs.tab', function () {
+                document.getElementById('InputMode').value = this.dataset.tab;
+            });
+        });
+
+        // Loading state on submit
+        document.getElementById('articleForm').addEventListener('submit', function () {
+            var btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.querySelector('.btn-text').classList.add('d-none');
+            btn.querySelector('.spinner-content').classList.remove('d-none');
+        });
+    </script>
+}
