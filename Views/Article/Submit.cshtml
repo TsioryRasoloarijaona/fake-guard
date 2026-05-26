@@ -1,3 +1,4 @@
+@model fk_news_detector.Models.ViewModels.ArticleSubmitVM
 @{
     ViewBag.Title = "Analyze Article";
 }
@@ -19,18 +20,21 @@
 
                     <form id="articleForm" method="post" action="@Url.Action("Submit", "Article")">
                         @Html.AntiForgeryToken()
-                        <input type="hidden" id="InputMode" name="InputMode" value="text" />
+                        <input type="hidden" id="InputMode" name="InputMode" value="@(Model?.InputMode ?? "text")" />
 
                         <!-- Tabs -->
+                        @{
+                            var isUrlMode = Model?.InputMode == "url";
+                        }
                         <ul class="nav nav-tabs" id="inputTabs" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" id="text-tab" data-toggle="tab" href="#panel-text"
+                                <a class="nav-link @(isUrlMode ? "" : "active")" id="text-tab" data-toggle="tab" href="#panel-text"
                                    role="tab" data-tab="text">
                                     📋 Paste Text
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="url-tab" data-toggle="tab" href="#panel-url"
+                                <a class="nav-link @(isUrlMode ? "active" : "")" id="url-tab" data-toggle="tab" href="#panel-url"
                                    role="tab" data-tab="url">
                                     🔗 From URL
                                 </a>
@@ -40,7 +44,7 @@
                         <div class="tab-content" id="inputTabContent">
 
                             <!-- Tab 1: Paste Text -->
-                            <div class="tab-pane fade show active" id="panel-text" role="tabpanel">
+                            <div class="tab-pane fade @(isUrlMode ? "" : "show active")" id="panel-text" role="tabpanel">
                                 <div class="form-group">
                                     <label class="form-label" for="Title">Article Title</label>
                                     <input type="text" id="Title" name="Title" class="form-control"
@@ -64,17 +68,19 @@
                             </div>
 
                             <!-- Tab 2: From URL -->
-                            <div class="tab-pane fade" id="panel-url" role="tabpanel">
+                            <div class="tab-pane fade @(isUrlMode ? "show active" : "")" id="panel-url" role="tabpanel">
                                 <div class="form-group">
                                     <label class="form-label" for="ArticleUrl">Article URL</label>
                                     <input type="url" id="ArticleUrl" name="ArticleUrl" class="form-control"
-                                           placeholder="https://example.com/article/breaking-news" />
+                                           placeholder="https://example.com/article/breaking-news"
+                                           value="@Model?.ArticleUrl" />
                                     <span class="text-danger small"></span>
                                 </div>
                                 <div class="alert alert-info">
                                     <strong>Auto-scrape:</strong> We'll fetch the page and extract the article body,
                                     title, author, and publication date automatically. JavaScript-rendered pages are supported.
                                 </div>
+
                             </div>
 
                         </div>
@@ -90,6 +96,45 @@
                     </form>
                 </div>
             </div>
+
+            @if (Model?.Extracted != null)
+            {
+                var ex = Model.Extracted;
+                <div class="card shadow mt-4" id="extractedResult">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <strong>Extracted article</strong>
+                        <span class="badge @(ex.Success ? "badge-success" : "badge-warning")">
+                            @(ex.Success ? "Ready" : "Too short")
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        @if (!string.IsNullOrWhiteSpace(ex.Title))
+                        {
+                            <h5 class="card-title">@ex.Title</h5>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(ex.Author) || ex.PublishedDate.HasValue)
+                        {
+                            <p class="text-muted small mb-2">
+                                @ex.Author
+                                @if (ex.PublishedDate.HasValue)
+                                {
+                                    <span>— @ex.PublishedDate.Value.ToString("dd MMM yyyy")</span>
+                                }
+                            </p>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(ex.Content))
+                        {
+                            <div style="max-height:400px;overflow-y:auto;white-space:pre-wrap;font-size:.875rem;background:#f8f9fa;padding:1rem;border-radius:.25rem;">@ex.Content</div>
+                            <p class="text-muted small mt-2 mb-0">@ex.Content.Length characters</p>
+                        }
+                        else
+                        {
+                            <p class="text-muted mb-0">No content could be extracted.</p>
+                        }
+                    </div>
+                </div>
+            }
+
         </div>
     </div>
 </div>
@@ -97,9 +142,9 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        // Sync hidden InputMode with active tab
+        // Sync hidden InputMode with active tab — use click so it fires before form submit
         document.querySelectorAll('#inputTabs .nav-link').forEach(function (tab) {
-            tab.addEventListener('shown.bs.tab', function () {
+            tab.addEventListener('click', function () {
                 document.getElementById('InputMode').value = this.dataset.tab;
             });
         });
