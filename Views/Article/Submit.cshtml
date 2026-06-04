@@ -135,6 +135,52 @@
                 </div>
             }
 
+            @if (Model?.Detection != null)
+            {
+                var det = Model.Detection;
+                var (bg, icon) = det.Verdict switch
+                {
+                    "FAKE" => ("danger",  "❌"),
+                    "REAL" => ("success", "✅"),
+                    _      => ("warning", "⚠️")
+                };
+                <div class="card shadow mt-4 border-@bg">
+                    <div class="card-header bg-@bg text-white d-flex justify-content-between align-items-center">
+                        <strong>@icon Verdict</strong>
+                        @if (det.Confidence.HasValue)
+                        {
+                            <span>Confidence: @det.Confidence.Value.ToString("P0")</span>
+                        }
+                    </div>
+                    <div class="card-body text-center py-4">
+                        @if (det.Success)
+                        {
+                            <h2 class="display-4 font-weight-bold text-@bg">@det.Verdict</h2>
+                            @if (det.Confidence.HasValue)
+                            {
+                                <div class="progress mt-3" style="height:12px;">
+                                    <div class="progress-bar bg-@bg"
+                                         role="progressbar"
+                                         style="width:@((det.Confidence.Value * 100).ToString("F0"))%">
+                                    </div>
+                                </div>
+                                <p class="text-muted small mt-2">
+                                    Model confidence: @det.Confidence.Value.ToString("P1")
+                                    @if (det.Verdict == "UNCERTAIN")
+                                    {
+                                        <span>— below the 75% threshold</span>
+                                    }
+                                </p>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-danger mb-0">@det.ErrorMessage</p>
+                        }
+                    </div>
+                </div>
+            }
+
         </div>
     </div>
 </div>

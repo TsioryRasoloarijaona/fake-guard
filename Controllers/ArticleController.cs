@@ -1,3 +1,4 @@
+using fk_news_detector.Models;
 using fk_news_detector.Models.ViewModels;
 using fk_news_detector.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -7,10 +8,12 @@ namespace fk_news_detector.Controllers;
 public class ArticleController : Controller
 {
     private readonly INewsExtractionService _extractor;
+    private readonly IDetectionService _detector;
 
-    public ArticleController(INewsExtractionService extractor)
+    public ArticleController(INewsExtractionService extractor, IDetectionService detector)
     {
         _extractor = extractor;
+        _detector = detector;
     }
 
     [HttpGet]
@@ -50,7 +53,13 @@ public class ArticleController : Controller
             vm.Title = extracted.Title;
             vm.Content = extracted.Content;
             vm.SourceUrl = extracted.SourceUrl;
-            // TODO: pass to DetectionService, persist via UnitOfWork, redirect to Result
+
+            var result = await _detector.DetectAsync(extracted.Content, extracted.Title, extracted.SourceUrl);
+            vm.Detection = result;
+
+            if (!result.Success)
+                ModelState.AddModelError(string.Empty, result.ErrorMessage ?? "Detection failed.");
+
             return View(vm);
         }
         else
@@ -61,14 +70,20 @@ public class ArticleController : Controller
                 return View(vm);
             }
 
-            vm.Extracted = new fk_news_detector.Models.ExtractedArticle
+            vm.Extracted = new ExtractedArticle
             {
                 Title = vm.Title ?? string.Empty,
                 Content = vm.Content,
                 SourceUrl = vm.SourceUrl ?? string.Empty,
                 Success = true
             };
-            // TODO: pass to DetectionService, persist via UnitOfWork
+
+            var result = await _detector.DetectAsync(vm.Content, vm.Title, vm.SourceUrl);
+            vm.Detection = result;
+
+            if (!result.Success)
+                ModelState.AddModelError(string.Empty, result.ErrorMessage ?? "Detection failed.");
+
             return View(vm);
         }
     }

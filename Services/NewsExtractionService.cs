@@ -29,7 +29,7 @@ public class NewsExtractionService : INewsExtractionService
             if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) ||
                 (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
             {
-                return Fail(url, "Invalid URL — must start with http:// or https://");
+                return Fail(url, "Invalid URL - must start with http:// or https://");
             }
 
             var response = await _http.GetAsync(uri);
@@ -122,7 +122,6 @@ public class NewsExtractionService : INewsExtractionService
 
     private static string ExtractContent(HtmlDocument doc)
     {
-        // Strategy 1: <article>
         var article = doc.DocumentNode.SelectSingleNode("//article");
         if (article != null)
         {
@@ -130,7 +129,7 @@ public class NewsExtractionService : INewsExtractionService
             if (text.Length >= 100) return text;
         }
 
-        // Strategy 2: known class/id patterns + itemprop
+        
         var patterns = new[] { "article-body", "article-content", "story-body", "post-content", "entry-content" };
         foreach (var pattern in patterns)
         {
@@ -150,7 +149,7 @@ public class NewsExtractionService : INewsExtractionService
             if (text.Length >= 100) return text;
         }
 
-        // Strategy 3: div with most paragraph text
+        
         var bestDiv = doc.DocumentNode
             .SelectNodes("//div[.//p]")?
             .Select(div => new { div, len = string.Concat(div.SelectNodes(".//p")?.Select(p => p.InnerText) ?? []).Length })
@@ -163,7 +162,7 @@ public class NewsExtractionService : INewsExtractionService
             if (text.Length >= 100) return text;
         }
 
-        // Strategy 4: concatenate all <p> elements as a last resort
+        
         var paragraphs = doc.DocumentNode.SelectNodes("//p");
         if (paragraphs != null)
         {
