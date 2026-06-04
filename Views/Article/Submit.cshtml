@@ -30,13 +30,13 @@
                             <li class="nav-item">
                                 <a class="nav-link @(isUrlMode ? "" : "active")" id="text-tab" data-toggle="tab" href="#panel-text"
                                    role="tab" data-tab="text">
-                                    📋 Paste Text
+                                    <i class="bi bi-clipboard-text mr-1"></i> Paste Text
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link @(isUrlMode ? "active" : "")" id="url-tab" data-toggle="tab" href="#panel-url"
                                    role="tab" data-tab="url">
-                                    🔗 From URL
+                                    <i class="bi bi-link-45deg mr-1"></i> From URL
                                 </a>
                             </li>
                         </ul>
@@ -86,7 +86,7 @@
                         </div>
 
                         <button type="submit" id="submitBtn" class="btn btn-accent btn-lg btn-block mt-3">
-                            <span class="btn-text">🔍 Analyze Article</span>
+                            <span class="btn-text"><i class="bi bi-search mr-2"></i>Analyze Article</span>
                             <span class="spinner-content d-none">
                                 <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
                                 Analyzing…
@@ -138,15 +138,15 @@
             @if (Model?.Detection != null)
             {
                 var det = Model.Detection;
-                var (bg, icon) = det.Verdict switch
+                var (bg, iconClass) = det.Verdict switch
                 {
-                    "FAKE" => ("danger",  "❌"),
-                    "REAL" => ("success", "✅"),
-                    _      => ("warning", "⚠️")
+                    "FAKE" => ("danger",  "bi-x-circle-fill"),
+                    "REAL" => ("success", "bi-check-circle-fill"),
+                    _      => ("warning", "bi-exclamation-triangle-fill")
                 };
                 <div class="card shadow mt-4 border-@bg">
                     <div class="card-header bg-@bg text-white d-flex justify-content-between align-items-center">
-                        <strong>@icon Verdict</strong>
+                        <strong><i class="bi @iconClass mr-1"></i> Verdict</strong>
                         @if (det.Confidence.HasValue)
                         {
                             <span>Confidence: @det.Confidence.Value.ToString("P0")</span>

@@ -32,7 +32,7 @@ public class ArticleController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Submit(ArticleSubmitVM vm)
     {
-        if (vm.InputMode == "url" || !string.IsNullOrWhiteSpace(vm.ArticleUrl))
+        if (vm.InputMode == "url")
         {
             if (string.IsNullOrWhiteSpace(vm.ArticleUrl))
             {

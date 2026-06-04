@@ -4,7 +4,7 @@
     // Swap these values when the model is wired up
     var verdict       = "FAKE";
     var badgeClass    = "danger";   // danger | success | warning
-    var verdictIcon   = "❌";       // ❌ | ✅ | ⚠️
+    var verdictIcon   = "bi-x-circle-fill";   // bi-x-circle-fill | bi-check-circle-fill | bi-exclamation-triangle-fill
     var confidencePct = 91;
 }
 
@@ -22,7 +22,7 @@
             <!-- 1. Verdict Card -->
             <div class="card shadow mb-4 verdict-card border-@badgeClass">
                 <div class="card-body text-center py-5">
-                    <span class="verdict-emoji">@verdictIcon</span>
+                    <i class="bi @verdictIcon verdict-emoji"></i>
                     <span class="badge badge-@badgeClass badge-pill verdict-badge mb-3">@verdict</span>
                     <div class="mb-3">
                         <small class="text-muted font-weight-bold text-uppercase">Confidence Score</small>
@@ -96,7 +96,7 @@
             <!-- 4. Navigation Row -->
             <div class="d-flex justify-content-between flex-wrap">
                 <a href="@Url.Action("Submit", "Article")" class="btn btn-accent">
-                    ← Analyze Another
+                    <i class="bi bi-arrow-left mr-1"></i> Analyze Another
                 </a>
                 <a href="@Url.Action("Index", "Article")" class="btn btn-outline-secondary">
                     View History
