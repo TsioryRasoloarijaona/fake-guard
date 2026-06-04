@@ -10,14 +10,12 @@ public class BlacklistedDomainRepository : IBlacklistedDomainRepository
     public BlacklistedDomainRepository(Cassandra.ISession session)
         => _mapper = new Mapper(session);
 
-    // Non utilisé — la clé primaire est un TEXT (domain), pas un UUID
-    // On garde pour respecter l'interface IRepository<T>
+   
     public Task<BlacklistedDomain?> GetByIdAsync(Guid id)
         => throw new NotSupportedException(
             "BlacklistedDomain uses domain (string) as key. Use GetByDomainAsync instead.");
 
-    // Récupère tous les domaines blacklistés
-    // Utilisé pour l'import CSV en Phase 13
+    
     public async Task<IEnumerable<BlacklistedDomain>> GetAllAsync()
     {
         try
@@ -31,7 +29,6 @@ public class BlacklistedDomainRepository : IBlacklistedDomainRepository
     }
 
     // Insère un domaine blacklisté
-    // Utilisé lors de l'import CSV en Phase 13
     public async Task AddAsync(BlacklistedDomain entity)
     {
         try
@@ -61,9 +58,7 @@ public class BlacklistedDomainRepository : IBlacklistedDomainRepository
         => throw new NotSupportedException(
             "Use DeleteAsync(string domain) instead.");
 
-    // ⭐ Méthode clé — répond à Q6 du projet
-    // Retourne true si le domaine existe dans la table
-    // Exemple : ExistsAsync("breitbart.com") → true
+  
     public async Task<bool> ExistsAsync(string domain)
     {
         try

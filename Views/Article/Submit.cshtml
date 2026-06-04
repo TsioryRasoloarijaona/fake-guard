@@ -1,6 +1,6 @@
 @model fk_news_detector.Models.ViewModels.ArticleSubmitVM
 @{
-    ViewBag.Title = "Analyze Article";
+ViewBag.Title = "Analyze Article";
 }
 
 <div class="page-header">
@@ -13,148 +13,267 @@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="card shadow">
-                <div class="card-body p-4">
 
-                    @Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
+```
+        <div class="card shadow">
+            <div class="card-body p-4">
 
-                    <form id="articleForm" method="post" action="@Url.Action("Submit", "Article")">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" id="InputMode" name="InputMode" value="@(Model?.InputMode ?? "text")" />
+                @Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
 
-                        <!-- Tabs -->
-                        @{
-                            var isUrlMode = Model?.InputMode == "url";
-                        }
-                        <ul class="nav nav-tabs" id="inputTabs" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link @(isUrlMode ? "" : "active")" id="text-tab" data-toggle="tab" href="#panel-text"
-                                   role="tab" data-tab="text">
-                                    📋 Paste Text
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(isUrlMode ? "active" : "")" id="url-tab" data-toggle="tab" href="#panel-url"
-                                   role="tab" data-tab="url">
-                                    🔗 From URL
-                                </a>
-                            </li>
-                        </ul>
+                <form id="articleForm" method="post" action="@Url.Action("Submit", "Article")">
+                    @Html.AntiForgeryToken()
 
-                        <div class="tab-content" id="inputTabContent">
+                    <input type="hidden"
+                           id="InputMode"
+                           name="InputMode"
+                           value="@(Model?.InputMode ?? "text")" />
 
-                            <!-- Tab 1: Paste Text -->
-                            <div class="tab-pane fade @(isUrlMode ? "" : "show active")" id="panel-text" role="tabpanel">
-                                <div class="form-group">
-                                    <label class="form-label" for="Title">Article Title</label>
-                                    <input type="text" id="Title" name="Title" class="form-control"
-                                           placeholder="Enter the article headline" />
-                                    <span class="text-danger small"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="Content">Article Content</label>
-                                    <textarea id="Content" name="Content" class="form-control"
-                                              rows="10" placeholder="Paste the full article text here…"></textarea>
-                                    <span class="text-danger small"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="SourceUrl">
-                                        Source URL <span class="text-muted font-weight-normal">(optional)</span>
-                                    </label>
-                                    <input type="url" id="SourceUrl" name="SourceUrl" class="form-control"
-                                           placeholder="https://example.com/article" />
-                                    <span class="text-danger small"></span>
-                                </div>
+                    @{
+                        var isUrlMode = Model?.InputMode == "url";
+                    }
+
+                    <ul class="nav nav-tabs" id="inputTabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link @(isUrlMode ? "" : "active")"
+                               id="text-tab"
+                               data-toggle="tab"
+                               href="#panel-text"
+                               role="tab"
+                               data-tab="text">
+                                📋 Paste Text
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link @(isUrlMode ? "active" : "")"
+                               id="url-tab"
+                               data-toggle="tab"
+                               href="#panel-url"
+                               role="tab"
+                               data-tab="url">
+                                🔗 From URL
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="inputTabContent">
+
+                        <div class="tab-pane fade @(isUrlMode ? "" : "show active")"
+                             id="panel-text"
+                             role="tabpanel">
+
+                            <div class="form-group">
+                                <label class="form-label" for="Title">
+                                    Article Title
+                                </label>
+
+                                <input type="text"
+                                       id="Title"
+                                       name="Title"
+                                       class="form-control"
+                                       placeholder="Enter the article headline" />
                             </div>
 
-                            <!-- Tab 2: From URL -->
-                            <div class="tab-pane fade @(isUrlMode ? "show active" : "")" id="panel-url" role="tabpanel">
-                                <div class="form-group">
-                                    <label class="form-label" for="ArticleUrl">Article URL</label>
-                                    <input type="url" id="ArticleUrl" name="ArticleUrl" class="form-control"
-                                           placeholder="https://example.com/article/breaking-news"
-                                           value="@Model?.ArticleUrl" />
-                                    <span class="text-danger small"></span>
-                                </div>
-                                <div class="alert alert-info">
-                                    <strong>Auto-scrape:</strong> We'll fetch the page and extract the article body,
-                                    title, author, and publication date automatically. JavaScript-rendered pages are supported.
-                                </div>
+                            <div class="form-group">
+                                <label class="form-label" for="Content">
+                                    Article Content
+                                </label>
 
+                                <textarea id="Content"
+                                          name="Content"
+                                          class="form-control"
+                                          rows="10"
+                                          placeholder="Paste the full article text here…"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="SourceUrl">
+                                    Source URL
+                                    <span class="text-muted font-weight-normal">(optional)</span>
+                                </label>
+
+                                <input type="url"
+                                       id="SourceUrl"
+                                       name="SourceUrl"
+                                       class="form-control"
+                                       placeholder="https://example.com/article" />
                             </div>
 
                         </div>
 
-                        <button type="submit" id="submitBtn" class="btn btn-accent btn-lg btn-block mt-3">
-                            <span class="btn-text">🔍 Analyze Article</span>
-                            <span class="spinner-content d-none">
-                                <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
-                                Analyzing…
-                            </span>
-                        </button>
+                        <div class="tab-pane fade @(isUrlMode ? "show active" : "")"
+                             id="panel-url"
+                             role="tabpanel">
 
-                    </form>
+                            <div class="form-group">
+                                <label class="form-label" for="ArticleUrl">
+                                    Article URL
+                                </label>
+
+                                <input type="url"
+                                       id="ArticleUrl"
+                                       name="ArticleUrl"
+                                       class="form-control"
+                                       placeholder="https://example.com/article/breaking-news"
+                                       value="@Model?.ArticleUrl" />
+                            </div>
+
+                            <div class="alert alert-info">
+                                <strong>Auto-scrape:</strong>
+                                We'll fetch the page and extract the article body,
+                                title, author, and publication date automatically.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <button type="submit"
+                            id="submitBtn"
+                            class="btn btn-accent btn-lg btn-block mt-3">
+
+                        <span class="btn-text">
+                            🔍 Analyze Article
+                        </span>
+
+                        <span class="spinner-content d-none">
+                            <span class="spinner-border spinner-border-sm mr-2"></span>
+                            Analyzing…
+                        </span>
+
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+
+        @if (ViewBag.Label != null)
+        {
+            <div class="card shadow mt-4">
+                <div class="card-header">
+                    <strong>Detection Result</strong>
+                </div>
+
+                <div class="card-body">
+
+                    @if ((bool)ViewBag.IsFake)
+                    {
+                        <div class="alert alert-danger">
+                            <h4 class="mb-0">⚠️ FAKE NEWS DETECTED</h4>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-success">
+                            <h4 class="mb-0">✅ LIKELY REAL NEWS</h4>
+                        </div>
+                    }
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <p>
+                                <strong>Verdict</strong><br />
+                                @ViewBag.Label
+                            </p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <p>
+                                <strong>Confidence</strong><br />
+                                @($"{Math.Round(Convert.ToDouble(ViewBag.Confidence ?? 0) * 100, 2)}%")
+                            </p>
+                        </div>
+
+                    </div>
+
                 </div>
             </div>
+        }
 
-            @if (Model?.Extracted != null)
-            {
-                var ex = Model.Extracted;
-                <div class="card shadow mt-4" id="extractedResult">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong>Extracted article</strong>
-                        <span class="badge @(ex.Success ? "badge-success" : "badge-warning")">
-                            @(ex.Success ? "Ready" : "Too short")
-                        </span>
-                    </div>
-                    <div class="card-body">
-                        @if (!string.IsNullOrWhiteSpace(ex.Title))
-                        {
-                            <h5 class="card-title">@ex.Title</h5>
-                        }
-                        @if (!string.IsNullOrWhiteSpace(ex.Author) || ex.PublishedDate.HasValue)
-                        {
-                            <p class="text-muted small mb-2">
-                                @ex.Author
-                                @if (ex.PublishedDate.HasValue)
-                                {
-                                    <span>— @ex.PublishedDate.Value.ToString("dd MMM yyyy")</span>
-                                }
-                            </p>
-                        }
-                        @if (!string.IsNullOrWhiteSpace(ex.Content))
-                        {
-                            <div style="max-height:400px;overflow-y:auto;white-space:pre-wrap;font-size:.875rem;background:#f8f9fa;padding:1rem;border-radius:.25rem;">@ex.Content</div>
-                            <p class="text-muted small mt-2 mb-0">@ex.Content.Length characters</p>
-                        }
-                        else
-                        {
-                            <p class="text-muted mb-0">No content could be extracted.</p>
-                        }
-                    </div>
+        @if (Model?.Extracted != null)
+        {
+            var ex = Model.Extracted;
+
+            <div class="card shadow mt-4" id="extractedResult">
+
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <strong>Extracted article</strong>
+
+                    <span class="badge @(ex.Success ? "badge-success" : "badge-warning")">
+                        @(ex.Success ? "Ready" : "Too short")
+                    </span>
                 </div>
-            }
 
-        </div>
+                <div class="card-body">
+
+                    @if (!string.IsNullOrWhiteSpace(ex.Title))
+                    {
+                        <h5 class="card-title">@ex.Title</h5>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(ex.Author) || ex.PublishedDate.HasValue)
+                    {
+                        <p class="text-muted small mb-2">
+                            @ex.Author
+
+                            @if (ex.PublishedDate.HasValue)
+                            {
+                                <span>
+                                    — @ex.PublishedDate.Value.ToString("dd MMM yyyy")
+                                </span>
+                            }
+                        </p>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(ex.Content))
+                    {
+                        <div style="max-height:400px;overflow-y:auto;white-space:pre-wrap;font-size:.875rem;background:#f8f9fa;padding:1rem;border-radius:.25rem;">
+                            @ex.Content
+                        </div>
+
+                        <p class="text-muted small mt-2 mb-0">
+                            @ex.Content.Length characters
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">
+                            No content could be extracted.
+                        </p>
+                    }
+
+                </div>
+
+            </div>
+        }
+
     </div>
 </div>
+```
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-    <script>
-        // Sync hidden InputMode with active tab — use click so it fires before form submit
-        document.querySelectorAll('#inputTabs .nav-link').forEach(function (tab) {
-            tab.addEventListener('click', function () {
-                document.getElementById('InputMode').value = this.dataset.tab;
-            });
-        });
+</div>
 
-        // Loading state on submit
-        document.getElementById('articleForm').addEventListener('submit', function () {
-            var btn = document.getElementById('submitBtn');
-            btn.disabled = true;
-            btn.querySelector('.btn-text').classList.add('d-none');
-            btn.querySelector('.spinner-content').classList.remove('d-none');
+@section Scripts { <partial name="_ValidationScriptsPartial" />
+
+```
+<script>
+    document.querySelectorAll('#inputTabs .nav-link').forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            document.getElementById('InputMode').value = this.dataset.tab;
         });
-    </script>
+    });
+
+    document.getElementById('articleForm').addEventListener('submit', function () {
+        var btn = document.getElementById('submitBtn');
+
+        btn.disabled = true;
+
+        btn.querySelector('.btn-text').classList.add('d-none');
+        btn.querySelector('.spinner-content').classList.remove('d-none');
+    });
+</script>
+```
+
 }
