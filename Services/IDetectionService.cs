@@ -1,4 +1,4 @@
-﻿namespace fk_news_detector.Services;
+namespace fk_news_detector.Services;
 using fk_news_detector.Models;
 public interface IDetectionService
 {
