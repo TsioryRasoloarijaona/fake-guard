@@ -1,6 +1,7 @@
 using fk_news_detector.Models;
 using fk_news_detector.Models.ViewModels;
 using fk_news_detector.Services;
+using fk_news_detector.UnitOfWork;
 using Microsoft.AspNetCore.Mvc;
 
 namespace fk_news_detector.Controllers;
@@ -8,18 +9,34 @@ namespace fk_news_detector.Controllers;
 public class ArticleController : Controller
 {
     private readonly INewsExtractionService _extractor;
-    private readonly IDetectionService _detector;
+    private readonly IArticleService _articleService;
+    private readonly IUnitOfWork _uow;
 
-    public ArticleController(INewsExtractionService extractor, IDetectionService detector)
+    public ArticleController(INewsExtractionService extractor, IArticleService articleService, IUnitOfWork uow)
     {
         _extractor = extractor;
-        _detector = detector;
+        _articleService = articleService;
+        _uow = uow;
     }
 
     [HttpGet]
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        var articles = await _uow.Articles.GetAllAsync();
+        var vm = articles
+            .OrderByDescending(a => a.SubmittedAt)
+            .Select(a => new ResultDisplayVM
+            {
+                ArticleId   = a.ArticleId,
+                Title       = a.Title,
+                SourceUrl   = a.SourceUrl,
+                SubmittedAt = a.SubmittedAt,
+                Verdict     = a.Verdict,
+                Confidence  = a.Confidence,
+                ModelName   = a.ModelName
+            })
+            .ToList();
+        return View(vm);
     }
 
     [HttpGet]
@@ -32,6 +49,8 @@ public class ArticleController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Submit(ArticleSubmitVM vm)
     {
+        ExtractedArticle extracted;
+
         if (vm.InputMode == "url")
         {
             if (string.IsNullOrWhiteSpace(vm.ArticleUrl))
@@ -40,27 +59,13 @@ public class ArticleController : Controller
                 return View(vm);
             }
 
-            var extracted = await _extractor.ExtractAsync(vm.ArticleUrl);
-            vm.Extracted = extracted;
+            extracted = await _extractor.ExtractAsync(vm.ArticleUrl);
 
             if (!extracted.Success)
             {
                 ModelState.AddModelError("ArticleUrl", extracted.ErrorMessage ?? "Extraction failed.");
                 return View(vm);
             }
-
-            ModelState.Clear();
-            vm.Title = extracted.Title;
-            vm.Content = extracted.Content;
-            vm.SourceUrl = extracted.SourceUrl;
-
-            var result = await _detector.DetectAsync(extracted.Content, extracted.Title, extracted.SourceUrl);
-            vm.Detection = result;
-
-            if (!result.Success)
-                ModelState.AddModelError(string.Empty, result.ErrorMessage ?? "Detection failed.");
-
-            return View(vm);
         }
         else
         {
@@ -70,22 +75,17 @@ public class ArticleController : Controller
                 return View(vm);
             }
 
-            vm.Extracted = new ExtractedArticle
+            extracted = new ExtractedArticle
             {
                 Title = vm.Title ?? string.Empty,
                 Content = vm.Content,
                 SourceUrl = vm.SourceUrl ?? string.Empty,
                 Success = true
             };
-
-            var result = await _detector.DetectAsync(vm.Content, vm.Title, vm.SourceUrl);
-            vm.Detection = result;
-
-            if (!result.Success)
-                ModelState.AddModelError(string.Empty, result.ErrorMessage ?? "Detection failed.");
-
-            return View(vm);
         }
+
+        var article = await _articleService.GetOrAnalyzeAsync(extracted);
+        return RedirectToAction("Details", "Result", new { id = article.ArticleId });
     }
 
     [HttpPost]

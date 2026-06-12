@@ -21,8 +21,7 @@
                     <form id="articleForm" method="post" action="@Url.Action("Submit", "Article")">
                         @Html.AntiForgeryToken()
                         <input type="hidden" id="InputMode" name="InputMode" value="@(Model?.InputMode ?? "text")" />
-
-                        <!-- Tabs -->
+                        
                         @{
                             var isUrlMode = Model?.InputMode == "url";
                         }
@@ -188,14 +187,14 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        // Sync hidden InputMode with active tab — use click so it fires before form submit
+       
         document.querySelectorAll('#inputTabs .nav-link').forEach(function (tab) {
             tab.addEventListener('click', function () {
                 document.getElementById('InputMode').value = this.dataset.tab;
             });
         });
 
-        // Loading state on submit
+        
         document.getElementById('articleForm').addEventListener('submit', function () {
             var btn = document.getElementById('submitBtn');
             btn.disabled = true;

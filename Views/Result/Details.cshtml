@@ -1,17 +1,12 @@
+@model fk_news_detector.Models.ViewModels.ResultDisplayVM
 @{
     ViewBag.Title = "Analysis Result";
-
-    // Swap these values when the model is wired up
-    var verdict       = "FAKE";
-    var badgeClass    = "danger";   // danger | success | warning
-    var verdictIcon   = "bi-x-circle-fill";   // bi-x-circle-fill | bi-check-circle-fill | bi-exclamation-triangle-fill
-    var confidencePct = 91;
 }
 
 <div class="page-header">
     <div class="container">
         <h1>Analysis Result</h1>
-        <p>Completed — May 25, 2026, 14:32 UTC</p>
+        <p>Completed — @Model.SubmittedAt.ToString("dd MMM yyyy, HH:mm") UTC</p>
     </div>
 </div>
 
@@ -20,24 +15,24 @@
         <div class="col-lg-7">
 
             <!-- 1. Verdict Card -->
-            <div class="card shadow mb-4 verdict-card border-@badgeClass">
+            <div class="card shadow mb-4 verdict-card border-@Model.BadgeClass">
                 <div class="card-body text-center py-5">
-                    <i class="bi @verdictIcon verdict-emoji"></i>
-                    <span class="badge badge-@badgeClass badge-pill verdict-badge mb-3">@verdict</span>
+                    <i class="bi @Model.VerdictIcon verdict-emoji"></i>
+                    <span class="badge badge-@Model.BadgeClass badge-pill verdict-badge mb-3">@Model.Verdict</span>
                     <div class="mb-3">
                         <small class="text-muted font-weight-bold text-uppercase">Confidence Score</small>
                         <div class="progress mt-2">
-                            <div class="progress-bar bg-@badgeClass"
+                            <div class="progress-bar bg-@Model.BadgeClass"
                                  role="progressbar"
-                                 style="width: @confidencePct%"
-                                 aria-valuenow="@confidencePct"
+                                 style="width: @Model.ConfidencePct%"
+                                 aria-valuenow="@Model.ConfidencePct"
                                  aria-valuemin="0"
                                  aria-valuemax="100">
-                                @confidencePct%
+                                @Model.ConfidencePct%
                             </div>
                         </div>
                     </div>
-                    <small class="text-muted">Model: FakeGuard v1</small>
+                    <small class="text-muted">Model: @(Model.ModelName ?? "FakeGuard v1")</small>
                 </div>
             </div>
 
@@ -47,26 +42,67 @@
                     <h5 class="card-title font-weight-bold mb-3">Article Details</h5>
                     <dl class="row mb-0">
                         <dt class="col-sm-3 text-muted">Title</dt>
-                        <dd class="col-sm-9">Scientists Claim Moon Is Made of Cheese, NASA Confirms</dd>
+                        <dd class="col-sm-9">@Model.Title</dd>
 
-                        <dt class="col-sm-3 text-muted">Source</dt>
-                        <dd class="col-sm-9">
-                            <a href="https://example-news.com/moon-cheese" target="_blank" rel="noopener noreferrer">
-                                example-news.com/moon-cheese
-                            </a>
-                        </dd>
+                        @if (!string.IsNullOrWhiteSpace(Model.SourceUrl))
+                        {
+                            <dt class="col-sm-3 text-muted">Source</dt>
+                            <dd class="col-sm-9">
+                                <a href="@Model.SourceUrl" target="_blank" rel="noopener noreferrer">
+                                    @Model.SourceUrl
+                                </a>
+                            </dd>
+                        }
 
                         <dt class="col-sm-3 text-muted">Submitted</dt>
-                        <dd class="col-sm-9 mb-0">25 May 2026, 14:32 UTC</dd>
+                        <dd class="col-sm-9 mb-0">@Model.SubmittedAt.ToString("dd MMM yyyy, HH:mm") UTC</dd>
                     </dl>
                 </div>
             </div>
 
-            <!-- 3. Explanation Card -->
+            <!-- 3. Article Content Card -->
+            @{
+                var preview = Model.Content.Length > 300
+                    ? Model.Content.Substring(0, 300).TrimEnd() + "…"
+                    : Model.Content;
+                var hasMore = Model.Content.Length > 300;
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.Content))
+            {
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title font-weight-bold mb-3">Article Content</h5>
+                        <p id="article-preview" class="text-muted mb-2" style="white-space: pre-wrap;">@preview</p>
+                        @if (hasMore)
+                        {
+                            <p id="article-full" class="text-muted mb-2" style="white-space: pre-wrap; display:none;">@Model.Content</p>
+                            <button type="button" id="btn-see-more" class="btn btn-sm btn-outline-secondary"
+                                    onclick="toggleContent()">
+                                <i class="bi bi-chevron-down mr-1"></i> See more
+                            </button>
+                        }
+                    </div>
+                </div>
+                <script>
+                    function toggleContent() {
+                        var preview = document.getElementById('article-preview');
+                        var full = document.getElementById('article-full');
+                        var btn = document.getElementById('btn-see-more');
+                        var expanded = full.style.display !== 'none';
+                        preview.style.display = expanded ? '' : 'none';
+                        full.style.display = expanded ? 'none' : '';
+                        btn.innerHTML = expanded
+                            ? '<i class="bi bi-chevron-down mr-1"></i> See more'
+                            : '<i class="bi bi-chevron-up mr-1"></i> See less';
+                    }
+                </script>
+            }
+
+            <!-- 5. Explanation Card -->
             <div class="card shadow-sm mb-4" style="background: #fff9f9;">
                 <div class="card-body">
                     <h5 class="card-title font-weight-bold mb-2">What does this mean?</h5>
-                    @if (badgeClass == "danger")
+                    @if (Model.BadgeClass == "danger")
                     {
                         <p class="text-danger mb-0">
                             The model detected strong indicators of misinformation — sensationalist language,
@@ -74,7 +110,7 @@
                             We recommend <strong>not sharing</strong> this article until claims are independently verified.
                         </p>
                     }
-                    else if (badgeClass == "success")
+                    else if (Model.BadgeClass == "success")
                     {
                         <p class="text-success mb-0">
                             The language, structure, and content of this article align with patterns found in credible journalism.
@@ -93,7 +129,7 @@
                 </div>
             </div>
 
-            <!-- 4. Navigation Row -->
+            <!-- 6. Navigation Row -->
             <div class="d-flex justify-content-between flex-wrap">
                 <a href="@Url.Action("Submit", "Article")" class="btn btn-accent">
                     <i class="bi bi-arrow-left mr-1"></i> Analyze Another
